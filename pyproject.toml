@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "document_topic_definition_with_ai"
+version = "0.1.0"
+description = "Document topic definition with AI"
+authors = ["boitsov.i.u. <boitsov_ivan@inbox.ru>"]
+readme = "README.md"
+
+
+packages = [
+    { include = "doc_topic_definition_data_and_models", from = "." }
+]
+
+
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+
+
+torch = { version = "2.1.0", source = "pytorch" }
+torchvision = { version = "0.16.0", source = "pytorch" }
+torchtext = {version = "0.16.0", source = "pytorch"}
+
+numpy = "<2.0"
+
+lightning = "2.1.0"
+pandas = "2.2.3"
+scikit-learn = "1.3.0"
+nltk = "3.8.1"
+matplotlib = "3.10.3"
+wandb = "0.19.11"
+hydra-core = "1.3.2"
+requests = "2.31.0"
+beautifulsoup4 = "4.12.0"
+tqdm = "4.65.0"
+pyopenssl = "25.1.0"
+gdown = "5.2.0"
+dvc = "3.59.2"
+pre-commit = "4.2.0"
+onnx = "1.18.0"
+onnxruntime = "1.22.0"
+tritonclient = "2.58.0"
+
+selenium = "^4.18.0"
+webdriver-manager = "^4.0.1"
+lxml = "^6.0.2"
+
+
+[tool.poetry.group.dev.dependencies]
+fire = "0.7.0"
+flake8 = "7.2.0"
+flake8-docstrings = "1.7.0"
+pylint = "3.3.7"
+
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu/"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

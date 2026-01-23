@@ -1,0 +1,4 @@
+label: wandb
+project: document_topic_definition_with_ai
+name: doc_topic_def
+save_dir: "."

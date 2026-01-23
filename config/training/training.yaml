@@ -1,0 +1,6 @@
+lr: 1e-4
+dropout: 0.1
+num_epochs: 10
+batch_size: 1
+num_workers: 1
+val_part: 0.05
