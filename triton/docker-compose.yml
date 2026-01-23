@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  triton-server:
+    image: nvcr.io/nvidia/tritonserver:23.10-py3
+    ports:
+      - "9000:8000"
+      - "9001:8001"
+      - "9002:8002"
+    volumes:
+      - ./model_repository:/models
+    command: tritonserver --model-repository=/models
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "8080:8080"
+    environment:
+      TRITON_URL: "triton-server:8000"
+    depends_on:
+      - triton-server

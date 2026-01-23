@@ -1,0 +1,26 @@
+name: "cbrf_rate_classifier"
+platform: "onnxruntime_onnx"
+max_batch_size: 0
+
+instance_group [
+  {
+    kind: KIND_CPU
+    count: 1
+  }
+]
+
+input [
+  {
+    name: "PREPROCESSED_TEXT"
+    data_type: TYPE_INT64
+    dims: [ -1, -1 ]
+  }
+]
+
+output [
+  {
+    name: "LOGITS"
+    data_type: TYPE_FP32
+    dims: [ -1, 3 ]
+  }
+]

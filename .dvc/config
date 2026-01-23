@@ -1,0 +1,9 @@
+[core]
+    remote = data
+['remote "data"']
+    url = ./dvc-storage/data
+['remote "models"']
+    url = ./dvc-storage/models
+
+#['remote "s3-backup"']
+#    url = s3://my-bucket/dvc-data  # S3 хранилище

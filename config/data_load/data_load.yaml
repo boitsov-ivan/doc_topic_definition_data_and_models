@@ -1,0 +1,30 @@
+train_data_path: ../../data/docs_train.csv
+test_data_path: ../../data/docs_test.csv
+data_path: ../../data
+vocab_path: ../../data/vocab_data/vocab.json
+x_label: preprocessed_sentences
+x_init_label: text
+y_label: target
+max_pad_len: 4096
+unk_token: <unk>
+
+
+hubs:
+  - artificial_intelligence
+  - popular_science
+  - programming
+  - python
+  - infosecurity
+  - machine_learning
+  - history
+  - sys_admin
+  - linux_dev
+  - network_technologies
+  - hardware
+  - pm
+  - it-infrastructure
+  - electronics
+  - devops
+  - physics
+
+max_number_of_pages_with_links_for_hub: 10  # на каждой странице по 20 ссылок на статья 3 --> 200 статей c каждого хаба.  Если укажем 0, то парсим все статьи каждого хаба.
