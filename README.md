@@ -51,7 +51,7 @@
 Модели должны справляться лучше чем бейзлайн модели проекта:
 1) MultiLabel классификатор по меткам hubs CatBoostClassifier F1-score = 0.69;
 2) MultiLabel классификатор по меткам tags CatBoostClassifier F1-score = 0.67;
-3) summarization
+3) summarization "cointegrated/rut5-base".
 
 
 ### Основные модели

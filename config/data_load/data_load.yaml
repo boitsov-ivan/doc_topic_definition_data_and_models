@@ -13,18 +13,86 @@ hubs:
   - artificial_intelligence
   - popular_science
   - programming
-  - python
-  - infosecurity
-  - machine_learning
-  - history
-  - sys_admin
-  - linux_dev
-  - network_technologies
-  - hardware
-  - pm
-  - it-infrastructure
-  - electronics
-  - devops
-  - physics
+  # - python
+  # - infosecurity
+  # - machine_learning
+  # - history
+  # - sys_admin
+  # - linux_dev
+  # - linux
+  # - network_technologies
+  # - hardware
+  # - pm
+  # - it-infrastructure
+  # - electronics
+  # - devops
+  # - physics
+  # - career
+  # - open_source
+  # - dev_management
+  # - instant_messaging
+  # - cpp
+  # - reverse-engineering
+  # - webdev
+  # - finance
+  # - android_dev
+  # - gamedev
+  # - algorithms
+  # - business-laws
+  # - cloud_services
+  # - java
+  # - go
+  # - rust
+  # - maths
+  # - javascript
+  # - c
+  # - db_admins
+  # - gadgets
+  # - controllers
+  # - network_hardware
+  # - circuit-design
+  # - dwh
+  # - win_dev
+  # - it_testing
+  # - cpu
+  # - postgresql
+  # - mobile_dev
+  # - wireless
+  # - brain
+  # - data_engineering
+  # - natural_language_processing
+  # - system_programming
+  # - kotlin
+  # - web_testing
+  # - biology
+  # - robot
+  # - bigdata
+  # - css
+  # - sound
+  # - github
+  # - sql
+  # - kubernetes
+  # - astronomy
+  # - os
+  # - image_processing
+  # - html5
+  # - php
+  # - network_standarts
+  # - statistics
+  # - crypto
+  # - api
+  # - p2p
+  # - compilers
+  # - assembler
+  # - git
+  # - distributed_systems
+  # - gpgpu
+  # - radio-communications
+  # - videocards
+  # - oop
+  # - r
+  # - django
+  # - ipv6
+  # - regex
 
-max_number_of_pages_with_links_for_hub: 10  # на каждой странице по 20 ссылок на статья 3 --> 200 статей c каждого хаба.  Если укажем 0, то парсим все статьи каждого хаба.
+max_number_of_pages_with_links_for_hub: 20  # например, 10, тогда на каждой странице по 20 ссылок на статья 3 --> 200 статей c каждого хаба.  Если укажем 0, то парсим все статьи каждого хаба.
