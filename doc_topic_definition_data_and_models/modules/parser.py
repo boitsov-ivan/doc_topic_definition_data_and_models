@@ -34,6 +34,28 @@ def edit(output_dir):
         return '|'.join(cleaned_hubs)
 
 
+    def extract_article_id(url):
+        """Извлекает числовой идентификатор из URL Habr"""
+        match = re.search(r'/articles/(\d+)', str(url))
+        if match:
+            return int(match.group(1))
+        return None
+    
+    def fix_hub_names(hub_list):
+        fixed_list = []
+        for hub in hub_list:
+            if isinstance(hub, str):
+                fixed_hub = re.sub(
+                    r'Распредел.+ые системы',
+                    'Распределённые системы',
+                    hub
+                )
+                fixed_list.append(fixed_hub)
+            else:
+                fixed_list.append(hub)
+        return fixed_list
+
+
     print(f"Cleaning data:")
     main_data_path = os.path.join(output_dir, "docs.csv")
     cleaned_data_path = os.path.join(output_dir, "docs_cleaned.csv")
@@ -49,6 +71,17 @@ def edit(output_dir):
 
     df['hubs'] = df['hubs'].apply(clean_hubs)
     df['tags'] = df['tags'].apply(clean_hubs)
+
+    df['doc_id'] = df['url'].apply(extract_article_id)
+    df = df.dropna(subset=['doc_id'])
+
+    df['hubs'] = df['hubs'].apply(lambda x: x.split('|') if isinstance(x, str) else 'None')
+    df = df[df['hubs'] != 'None']
+
+    df['hubs'] = df['hubs'].apply(fix_hub_names)
+
+    df['tags'] = df['tags'].apply(lambda x: x.split('|') if isinstance(x, str) else 'None')
+    df = df[df['tags'] != 'None']
 
     df.to_csv(cleaned_data_path, index=False, encoding="utf-8")
     print(f"Очищенные данные сохранены в: {cleaned_data_path}")
@@ -126,7 +159,7 @@ def get_page_links(pages: list) -> list:
             soup1 = BeautifulSoup(page1, 'lxml')
             links += ['https://habr.com' + el['href'] for el in soup1.find_all("a", class_="tm-title__link")]
 
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(0.01, 0.03))
         except TimeoutException as ex:
             print("Exception has been thrown. " + str(ex))
     driver.quit()
@@ -322,7 +355,7 @@ def parse_data(hubs, output_dir, max_links_pages_for_hub=1):
                             
                             print(f"\nСохранен прогресс: статья {article_idx + 1}/{len(new_hub_links)}\n") 
                     
-                    sleep_time = random.uniform(1, 2)
+                    sleep_time = random.uniform(0.01, 0.02)
                     time.sleep(sleep_time)    
                     
                 except Exception as e:
@@ -340,7 +373,7 @@ def parse_data(hubs, output_dir, max_links_pages_for_hub=1):
                     with open(progress_file, 'wb') as f:
                         pickle.dump(progress_data, f)
                     
-                    time.sleep(1)
+                    time.sleep(0.01)
                     continue
             
             articles_pbar.close()
