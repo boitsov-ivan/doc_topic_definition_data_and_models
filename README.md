@@ -4,9 +4,8 @@
 
 Проект по определению тематики документа с помощью ИИ.
 Цели проекта:
-1) обучить модель для определения тематики документа;
+1) обучить модель для определения тематики документа (мнометочная классификация);
 2) обучить модель для составления краткого пересказа содержания документа;
-3) обучить модель для получения качественного эмбединга документа для поиска похожих документов.
 Для обучения моделей используются статьи различных тематик с habr.ru.
 
 ## Формат входных и выходных данных
@@ -17,7 +16,7 @@
 
 Выходные данные:
 
-Модели определяют тематику документа, генерируют краткий пересказ документа, получают качественный эмбединг документа.
+Модели определяют тематику документа (метки hubs и tags), генерируют краткий пересказ документа.
 
 ## Метрики
 
@@ -37,7 +36,6 @@
 ### Данные
 
 Датасет - это парсинг статей различных тематик с habr.ru.
-[ссылка на диск с примером датасета](https://   ).
 Датасет сбалансированный.
 
 ### Потенциальные проблемы:
@@ -49,15 +47,14 @@
 ### Бейзлайн
 
 Модели должны справляться лучше чем бейзлайн модели проекта:
-1) MultiLabel классификатор по меткам hubs CatBoostClassifier F1-score = 0.69;
-2) MultiLabel классификатор по меткам tags CatBoostClassifier F1-score = 0.67;
-3) summarization "cointegrated/rut5-base".
+1) MultiLabel классификатор по меткам hubs CatBoostClassifier F1-score = 0.61;
+2) MultiLabel классификатор по меткам tags CatBoostClassifier F1-score = 0.61;
+3) summarization "Vikhr-Gemma-2B-instruct".
 
 
 ### Основные модели
 
-За основу данного проекта была взята     .
-[модель](https://      ).
+За основу данного проекта взяты CatBoostClassifier и Vikhr-Gemma-2B-instruct.
 
 0. Предобработка данных
 
@@ -80,7 +77,7 @@ class TextDataset(Dataset):
         )
 ```
 
-мы преобразуем их в датасет (только после этого шага можно применить метод
+мы преобразуем данные в датасет (только после этого шага можно применить метод
 random_split). По всем словам, имеющимся в тренировочном датасете, мы составляем
 словарь и токенизируем тексты. Для дальнейшего разбиения на батчи дополняем
 короткие строки токеном <pad>. При предобработке тестовых данных неизвестные
@@ -92,17 +89,18 @@ random_split). По всем словам, имеющимся в трениро�
 [torch.nn.DataLoader](https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader),
 это упрощает написание кода и ускоряет загрузку данных;
 
-1. Модель:
-
-```python
-
-
-
-
-
-```
-
-2. Оптимизатор
+Модели:
+1) LSTM Classifier для мнометочной классификации по tags и hubs;
+2) RNNClassifier для мнометочной классификации по tags и hubs;
+1) CatBoostClassifier для мнометочной классификации по tags и hubs;
+2) QLoRA-дообучение (4-bit base + LoRA fine-tuning) Vikhr-Gemma-2B-instruct для суммаризации.
+    Шаги разработки:
+    а) загружаем модель Vikhr-Gemma-2B-instruct в 4-bit → экономия VRAM
+    б) добавляем LoRA-адаптеры (ранг 16) в attention и FFN слои
+    в) обучаем только адаптеры на маленьком датасете (примеры «текст →
+    хорошее саммари»)
+    г) сохраняем только LoRA веса (не всю модель)
+    д) на инференсе объединяем базовую 4-bit модель + обученный LoRA
 
 В качестве оптимизатора в данной задаче используется
 [Adam](https://docs.pytorch.org/docs/stable/generated/torch.optim.Adam.html) с
@@ -112,13 +110,12 @@ LR scheduler-ом
 3. Минимизируем функцию потерь
    [CrossEntropyLoss](https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html);
 
-4. Модель обучается 10 эпох.
+4. Модели обучаются 10 эпох.
 
 ## Внедрение
 
-Модели могут использоваться как пакет для определения тематики документа, пересказа документа и поиска похожих документов с использованием эмбединга. 
-В проекте осуществляется перевод обученных
-моделей в формат .onnx для дальнейшей работы над моделями как продуктом.
+Модели могут использоваться как пакет для определения тематики документа, пересказа документа. 
+В проекте осуществляется перевод обученных моделей в формат .onnx и иные форматы сериализации для дальнейшей работы над моделями как продуктом.
 
 # Работа с проектом
 
@@ -186,13 +183,78 @@ doc_topic_definition_data_and_models
 |
 |----models
 ```
+## DVC локальная и на S3
+
+Активируйте окружение из корня проекта:
+
+```
+source $(poetry env info --path)/bin/activate
+```
+
+Введите ключи доступа к S3 хранилищу в **.dvc/config**
+
+```
+[core]
+    remote = data
+
+['remote "data"']
+    url = ./dvc-storage/data
+
+['remote "models"']
+    url = ./dvc-storage/models
+
+['remote "s3-backup"']
+    url = s3://mlops-hse-boitsov/dvc-data
+    endpointurl = https://storage.yandexcloud.net
+    access_key_id =
+    secret_access_key =
+    region = ru-central1
+```
+
+
+#### Инициализируйте DVC 
+```
+dvc init
+git add .dvc/
+git commit -m "Initialize DVC"
+
+
+mkdir data/s3_data
+
+cp data/*.csv data/s3_data/
+cp data/vocab_data data/s3_data/vocab_data
+
+dvc add data/s3_data
+
+
+mkdir data/s3_models
+cp models models/s3_models/
+
+dvc add models/s3_models
+```
+
+
+#### Выгрузить все данные в S3
+dvc push -r s3-backup
+
+#### Загрущить данные из S3
+dvc push
+
+#### Выгрузить конкретные файлы/папки
+dvc push data.dvc -r s3-backup
+dvc push models.dvc -r s3-backup
+
+#### Проверить, какие файлы не выгружены
+dvc status -c -r s3-backup
+
+
 
 ## Train
 
-Активируйте окружение:
+Активируйте окружение из корня проекта:
 
 ```
-poetry env activate
+source $(poetry env info --path)/bin/activate
 ```
 
 Для отслеживания метрик в ходе обучения и валидации необходимо авторизоваться в
@@ -216,8 +278,15 @@ poetry run python download_data.py
 ```
 cd ../train
 
-poetry run python train.py
+poetry run python train.py     # обучение LSTM Classifier 
+
+Измените настройки в конфиге для обучения RNN Classifier.
+
+Следующий код требует больших вычислительных ресурсов на GPU и модели обучались в гугл колабе:
+    1) train_catboost.py    # код обучения CATBOOST классификатора
+    2) train_vikhr.py    # код обучения QLora Vikhr-Gemma-2B-instruct
 ```
+
 
 ## Infer
 

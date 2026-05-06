@@ -4,22 +4,31 @@ data_path: ../../data
 vocab_path: ../../data/vocab_data/vocab.json
 x_label: preprocessed_sentences
 x_init_label: text
-y_label: target
+#y_label: tags
+y_label: hubs
 max_pad_len: 4096
 unk_token: <unk>
 
 
 hubs:
   - artificial_intelligence
-  - popular_science
   - programming
-  # - python
-  # - infosecurity
-  # - machine_learning
-  # - history
+  - python
+  - machine_learning
+  - linux
+  - data_engineering
+  - natural_language_processing
+  - algorithms
+  - maths
+  - bigdata
+  - github
+  - statistics
+  - git
+  - popular_science
+  - infosecurity
+  - history
   # - sys_admin
   # - linux_dev
-  # - linux
   # - network_technologies
   # - hardware
   # - pm
@@ -37,13 +46,11 @@ hubs:
   # - finance
   # - android_dev
   # - gamedev
-  # - algorithms
   # - business-laws
   # - cloud_services
   # - java
   # - go
   # - rust
-  # - maths
   # - javascript
   # - c
   # - db_admins
@@ -59,17 +66,13 @@ hubs:
   # - mobile_dev
   # - wireless
   # - brain
-  # - data_engineering
-  # - natural_language_processing
   # - system_programming
   # - kotlin
   # - web_testing
   # - biology
   # - robot
-  # - bigdata
   # - css
   # - sound
-  # - github
   # - sql
   # - kubernetes
   # - astronomy
@@ -78,13 +81,11 @@ hubs:
   # - html5
   # - php
   # - network_standarts
-  # - statistics
   # - crypto
   # - api
   # - p2p
   # - compilers
   # - assembler
-  # - git
   # - distributed_systems
   # - gpgpu
   # - radio-communications
@@ -95,4 +96,4 @@ hubs:
   # - ipv6
   # - regex
 
-max_number_of_pages_with_links_for_hub: 20  # например, 10, тогда на каждой странице по 20 ссылок на статья 3 --> 200 статей c каждого хаба.  Если укажем 0, то парсим все статьи каждого хаба.
+max_number_of_pages_with_links_for_hub: 30  # например, 10, тогда на каждой странице по 20 ссылок на статья 3 --> 200 статей c каждого хаба.  Если укажем 0, то парсим все статьи каждого хаба.

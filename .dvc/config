@@ -1,9 +1,15 @@
 [core]
     remote = data
+
 ['remote "data"']
     url = ./dvc-storage/data
+
 ['remote "models"']
     url = ./dvc-storage/models
 
-#['remote "s3-backup"']
-#    url = s3://my-bucket/dvc-data  # S3 хранилище
+['remote "s3-backup"']
+    url = s3://mlops-hse-boitsov/dvc-data
+    endpointurl = https://storage.yandexcloud.net
+    access_key_id =
+    secret_access_key =
+    region = ru-central1

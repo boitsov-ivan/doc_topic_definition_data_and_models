@@ -14,7 +14,7 @@ class CNNBiLSTMClassifier(nn.Module):
         embedding_dim: int = 300,
         hidden_size: int = 256,
         num_layers: int = 2,
-        num_classes: int = 3,
+        num_classes: int = 30,
         dropout: float = 0.5,
         num_filters: int = 100,
         filter_sizes: Tuple[int, ...] = (3, 4, 5),

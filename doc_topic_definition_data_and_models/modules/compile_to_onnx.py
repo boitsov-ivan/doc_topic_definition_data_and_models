@@ -3,8 +3,8 @@ import numpy as np
 import onnxruntime
 import torch
 
-import classifier_of_press_releases_cbrf.modules.constants as constants
-from classifier_of_press_releases_cbrf.modules.trainer import TextClassifier
+import doc_topic_definition_data_and_models.modules.constants as constants
+from doc_topic_definition_data_and_models.modules.trainer import TextClassifier
 
 
 def main(checkpoint_name: str) -> None:
