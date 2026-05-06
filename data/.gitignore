@@ -1,3 +1,4 @@
+*.csv
 /docs_train.csv
 /docs_test.csv
 /s3_data
